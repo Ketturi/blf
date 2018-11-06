@@ -1,18 +1,20 @@
+#ifndef DEFAULT_MODES_H_
+#define DEFAULT_MODES_H_
 // WARNING: You can only have a maximum of 16 modes TOTAL
 // That means NUM_MODES1 + NUM_MODES2 + NUM_HIDDEN MUST be <= 16
 
 // Normal modes (mode group 2 is defunct, it now increments mode_idx by 2)
 #define NUM_MODES   8
-#define MODESNx1    0,0,0,7,56,90,137,255      //(FET or Nx7135)
-#define MODES1x1    8,20,110,255,255,255,255,0 //(1x7135)
+#define MODESNx1    0  ,0  ,0  ,7  ,56 ,90 ,137,255      //(FET or Nx7135)
+#define MODES1x1    8  ,20 ,110,255,255,255,255,0		  //(1x7135)
 
 #define MODE1INC 1
 #define MODE2INC 2
 
 // Hidden modes are *after* the normal modes
 #define NUM_HIDDEN       6
-#define HIDDENMODES      BATTCHECK,TURBO,STROBE,BIKING_STROBE,SOS,BEACON
-#define HIDDENMODES_ALT  0,0,0,0,0,0   // Zeroes, same length as NUM_HIDDEN
+#define HIDDENMODES      BATTCHECK,TURBO,BIKING_STROBE,BEACON,STROBE,SOS
+#define HIDDENMODES_ALT  0,0,0,0,0,0   // zeros, same length as NUM_HIDDEN
 
 #define TURBO         255 // Convenience code for turbo mode
 #define BATTCHECK     254 // Convenience code for battery check mode
@@ -21,28 +23,18 @@
 #define SOS           251 // Convenience code for SOS mode
 #define BEACON        250 // Convenience code for beacon mode
 
-// Temp cal mode allows temperature monitoring on the attiny25/45/85.
-// Since they are not the target of this firmware, I've put less time
-// into making the temperature calibration process easy to use. Once
-// I get the attiny13 hacked into temperature measurement, I'll make
-// calibration more intuitive. 
-//
-// TODO: Measure temperature on attiny13a using datasheet spec for 
-// WDT Frequency compared to CPU clock.  WDT clock decreases exponentially 
-// with temperature, MCU frequency increases linearly.
-//
-//#if (ATTINY == 85 || ATTINY == 25)
-//#define TEMP_CAL_MODE 1   // Convenience code for temperature calibration mode 
-//#endif
-
 // How many timer ticks before before dropping down.
-// Each timer tick is 1s, so "30" would be a 30-second stepdown.
+// Each timer tick is 1s, so "30" would be a 30-second step down.
 // Max value of 255 unless you change "ticks"
-#define TURBO_TIMEOUT 20 
+#define TURBO_TIMEOUT 30
 // Turbo step down mode index
 #define TURBO_STEP_DOWN (NUM_MODES - 2)
 
 #define MODE_CNT (NUM_MODES + NUM_HIDDEN - 1) // Subtract 1 since mode_idx starts at 0
+
+// Output to use for blinks on battery check/config modes
+// (FET PWM level, Regulator PWM level)
+#define BLINK_BRIGHTNESS 0,20
 
 // Modes
 const uint8_t modesNx[] = { MODESNx1, HIDDENMODES };
@@ -61,5 +53,5 @@ const uint8_t modes1x[] = { MODES1x1, HIDDENMODES_ALT };
 
 // Set the bit value of the config mode you'd like when starting fresh,
 // or when the config is wiped
-#define CONFIG_DEFAULT (CONFIG_SET + MODE_GROUP) // 4 modes default
-
+#define CONFIG_DEFAULT (CONFIG_SET + MEMORY + MED_PRESS) // 4 modes default
+#endif /* DEFAULT_MODES_H_ */

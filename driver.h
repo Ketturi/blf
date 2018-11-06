@@ -1,14 +1,16 @@
-// Required libraries 
-//#include <avr/pgmspace.h>
-//#include <avr/io.h>
-//#include <avr/interrupt.h>
-//#include <avr/eeprom.h>
+#ifndef DRIVER_H_
+#define DRIVER_H_
+// Required libraries
+#include <avr/pgmspace.h>
+#include <avr/io.h>
+#include <avr/interrupt.h>
+#include <avr/eeprom.h>
 #include <avr/sleep.h>
-//#include <avr/power.h>
+#include <avr/power.h>
 #include <util/delay_basic.h>
 
 // Choose your MCU here, or in the build script
-//#define ATTINY 13
+#define ATTINY 13
 //#define ATTINY 25
 //#define ATTINY 85
 
@@ -38,9 +40,9 @@ Hey, you need to define ATTINY.
 #endif
 
 /*
- * =========================================================================
- * Settings to modify per driver
- */
+* =========================================================================
+* Settings to modify per driver
+*/
 //#define DEBUG
 
 //#define FAST 0x23           // fast PWM channel 1 only
@@ -61,22 +63,20 @@ Hey, you need to define ATTINY.
 
 // These values were measured using wight's "A17HYBRID-S" driver built by DBCstm.
 // Your mileage may vary.
-#define ADC_100         170 // the ADC value for 100% full (4.2V resting)
-#define ADC_75          162 // the ADC value for 75% full (4.0V resting)
-#define ADC_50          154 // the ADC value for 50% full (3.8V resting)
-#define ADC_25          141 // the ADC value for 25% full (3.5V resting)
-#define ADC_0           121 // the ADC value for 0% full (3.0V resting)
-#define ADC_LOW         113 // When do we start ramping down (2.8V)
-#define ADC_CRIT        109 // When do we shut the light off (2.7V)
-
-#define TEMP_CHANNEL 0x0f
+#define ADC_100         170 // the ADC value for 100% full (4.2V resting)		178
+#define ADC_75          165 // the ADC value for 75% full (4.0V resting)		170
+#define ADC_50          160 // the ADC value for 50% full (3.8V resting)		161
+#define ADC_25          148 // the ADC value for 25% full (3.5V resting)		148
+#define ADC_0           128 // the ADC value for 0% full (3.0V resting)			128
+#define ADC_LOW         115 // When do we start ramping down (2.8V)				119
+#define ADC_CRIT        109 // When do we shut the light off (2.7V)				111
 
 // the BLF EE A6 driver may have different offtime cap values than most other drivers
 // Values are between 1 and 255, and can be measured with offtime-cap.c
 // These #defines are the edge boundaries, not the center of the target.
 #define CAP_SHORT           230  // Anything higher than this is a short press
-#define CAP_MED             160  // Between CAP_MED and CAP_SHORT is a medium press
-                                 // Below CAP_MED is a long press
+#define CAP_MED             120  // Between CAP_MED and CAP_SHORT is a medium press
+// Below CAP_MED is a long press
 
 #define CAP_PIN     PB3
 #define CAP_CHANNEL 0x03    // MUX 03 corresponds with PB3 (Star 4)
@@ -91,15 +91,15 @@ Hey, you need to define ATTINY.
 #define ALT_PWM_LVL OCR0A   // OCR0A is the output compare register for PB0
 
 /*
- * =========================================================================
- */
+* =========================================================================
+*/
 
 
 void _delay_ms(uint8_t n)
 {
-    // TODO: make this take tenths of a ms instead of ms,
-    // for more precise timing?
-    while(n-- > 0) _delay_loop_2(DELAY_TWEAK);
+	// TODO: make this take tenths of a ms instead of ms,
+	// for more precise timing?
+	while(n-- > 0) _delay_loop_2(DELAY_TWEAK);
 }
 //void _delay_s()  // because it saves a bit of ROM space to do it this way
 //{
@@ -109,11 +109,10 @@ void _delay_ms(uint8_t n)
 // Max delay time 2550ms
 void _delay_10_ms(uint8_t n)
 {
-   	while(n-- > 0) _delay_loop_2(DELAY_TWEAK_10ms);
+	while(n-- > 0) _delay_loop_2(DELAY_TWEAK_10ms);
 }
 void _delay_s()  // because it saves a bit of ROM space to do it this way
 {
 	_delay_10_ms(100);
 }
-
-
+#endif /* DRIVER_H_ */
